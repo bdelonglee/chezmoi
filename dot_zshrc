@@ -430,6 +430,8 @@ export FZF_ALT_C_OPTS="
 # CTRL-Y to copy the command into clipboard using pbcopy
 export FZF_CTRL_R_OPTS="
   --tmux 80%
+  --preview 'echo {2..} | bat --style=plain -l bash --color=always'
+  --preview-window down:3:wrap
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
   --color header:italic
   --header 'Press CTRL-Y to copy command into clipboard'"
