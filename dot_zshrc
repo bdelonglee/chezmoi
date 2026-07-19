@@ -1,0 +1,490 @@
+# -------------------------------------------------------------------------- #
+# ============================== STARSHIP SH  ============================== #
+eval "$(starship init zsh)"
+
+# -------------------------------------------------------------------------- #
+# ============================== SOURCE FILES ============================== #
+
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+
+
+# FIX COMPDEF ERROR ON STARTUP
+# NEED TO BE BEFORE ANY COMPLETION OPTION
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+
+# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+export CARAPACE_BRIDGES='zsh,bash' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+# source <(carapace _carapace zsh)
+# source <(example _carapace zsh)
+eval "$(carapace _carapace)"
+
+alias rvr21="python /Users/bdelonglee/Documents/PROJECTS/DEV/rvr21.py"
+
+
+
+# -------------------------------------------------------------------------- #
+# ============================== OPTIONS =================================== #
+
+# COMPLETION --------------------------------------------------------------- #
+
+  # Autocompletion settings
+  # https://github.com/Phantas0s/.dotfiles/blob/master/zsh/completion.zsh
+  # These have to be on the top, I remember I had issues with some autocompletions if not
+  # zmodload zsh/complist
+  # compinit already initialized above (line 32); calling it twice doubles startup cost.
+  _comp_options+=(globdots) # With hidden files
+  # setopt MENU_COMPLETE        # Automatically highlight first element of completion menu
+  setopt AUTO_LIST        # Automatically list choices on ambiguous completion.
+  setopt COMPLETE_IN_WORD # Complete from both ends of a word.
+  # Define completers
+  zstyle ':completion:*' completer _extensions _complete _approximate
+  # Use cache for commands using cache
+  zstyle ':completion:*' use-cache on
+  # You have to use $HOME, because since in "" it will be treated as a literal string
+  zstyle ':completion:*' cache-path "$HOME/.zcompcache"
+  # Complete the alias when _expand_alias is used as a function
+  zstyle ':completion:*' complete true
+  # Allow you to select in a menu
+  zstyle ':completion:*' menu select
+  # Autocomplete options for cd instead of directory stack
+  zstyle ':completion:*' complete-options true
+  zstyle ':completion:*' file-sort modification
+  zstyle ':completion:*:*:*:*:corrections' format '%F{yellow}!- %d (errors: %e) -!%f'
+  zstyle ':completion:*:*:*:*:descriptions' format '%F{blue}-- %D %d --%f'
+  zstyle ':completion:*:*:*:*:messages' format ' %F{purple} -- %d --%f'
+  zstyle ':completion:*:*:*:*:warnings' format ' %F{red}-- no matches found --%f'
+  # zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+  # Colors for files and directory
+  # zstyle ':completion:*:*:*:*:default' list-colors '${(s.:.)LS_COLORS}'
+
+  zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+
+
+  # HISTORY ------------------------------------------------------------------ #
+
+  # Current number of entries Zsh is configured to store in memory (HISTSIZE)
+  # How many commands Zsh is configured to save to the history file (SAVEHIST)
+  # echo "HISTSIZE: $HISTSIZE"
+  # echo "SAVEHIST: $SAVEHIST"
+  # Store 10,000 entries in the command history
+  HISTFILE=~/.zsh_history
+  HISTSIZE=10000
+  SAVEHIST=10000
+  # Check if the history file exists, if not, create it
+  if [[ ! -f $HISTFILE ]]; then
+    touch $HISTFILE
+    chmod 600 $HISTFILE
+  fi
+  # Append commands to the history file as they are entered
+  setopt appendhistory
+  # Record timestamp of each command (helpful for auditing)
+  setopt extendedhistory
+  # Share command history data between all sessions
+  setopt sharehistory
+  # Incrementally append to the history file, rather than waiting until the shell exits
+  setopt incappendhistory
+  # Ignore duplicate commands in a row
+  setopt histignoredups
+  # Exclude commands that start with a space
+  setopt histignorespace
+  # Custom list of commands to ignore (adjust as needed)
+  # HISTIGNORE='ls*:bg*:fg*:exit*:ll*'
+
+# -------------------------------------------------------------------------- #
+# ======================== CURSOR CONFIG =================================== #
+
+  # https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
+  # You can customise the type of cursor you want (blinking or not, |, rectangle or _)
+  # by changing the numbers in the following sequences \e[5 q (5 is for beam, 1 is for block) as follows:
+  #  Set cursor style (DECSCUSR), VT520.
+  # 0  ⇒  blinking block.
+  # 1  ⇒  blinking block (default).
+  # 2  ⇒  steady block.
+  # 3  ⇒  blinking underline.
+  # 4  ⇒  steady underline.
+  # 5  ⇒  blinking bar, xterm.
+  # 6  ⇒  steady bar, xterm.
+
+  # vi mode
+  bindkey -v
+  export KEYTIMEOUT=1
+
+  # Change cursor shape for different vi modes.
+  function zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] ||
+      [[ $1 = 'block' ]]; then
+      echo -ne '\e[1 q'
+    elif [[ ${KEYMAP} == main ]] ||
+      [[ ${KEYMAP} == viins ]] ||
+      [[ ${KEYMAP} = '' ]] ||
+      [[ $1 = 'beam' ]]; then
+      echo -ne '\e[5 q'
+    fi
+  }
+  zle -N zle-keymap-select
+  zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+  }
+  zle -N zle-line-init
+  echo -ne '\e[5 q'                # Use beam shape cursor on startup.
+  preexec() { echo -ne '\e[5 q'; } # Use beam shape cursor for each new prompt.
+
+
+# -------------------------------------------------------------------------- #
+# ============================== ALIASES =================================== #
+
+# --- Pretty counters (colors + separators) ----------------------------------
+
+# If you ever need to disable icons, set: export COUNT_NO_ICONS=1
+_count_icon() {
+  [[ -n "${COUNT_NO_ICONS:-}" ]] && printf "" || printf "%s" "$1"
+}
+
+_count_pretty() {
+  local label="$1" icon="$2" n="$3" path="$4" mode="$5"
+
+  local reset="\033[0m"
+  local dim="\033[2m"
+  local bold="\033[1m"
+  local cyan="\033[36m"
+  local green="\033[32m"
+  local gray="\033[90m"
+
+  local ic; ic=$(_count_icon "$icon")
+
+  printf "${gray}────────────────────────────────────────${reset}\n\n"
+  printf "${cyan}%s${reset} ${bold}%s${reset} ${dim}(%s)${reset}\n" "$ic" "$label" "$mode"
+  printf "  ${green}%s${reset} ${bold}%s${reset}\n" "$n" "found"
+  printf "  ${dim}Path:${reset} %s\n" "$path"
+  printf "\n${gray}────────────────────────────────────────${reset}\n"
+}
+
+_count_only() {
+  # print count only (no spaces/newlines beyond the number + newline)
+  printf "%s\n" "$1"
+}
+
+# ---------------- Files ----------------
+
+countf() {
+  local p="${1:-.}"
+  local n
+  n=$(find "$p" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' ')
+  _count_pretty "Files" "󰈔" "$n" "$p" "non-recursive"
+}
+
+countfc() {
+  local p="${1:-.}"
+  local n
+  n=$(find "$p" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' ')
+  _count_only "$n"
+}
+
+countfr() {
+  local p="${1:-.}"
+  local n
+  n=$(find "$p" -type f 2>/dev/null | wc -l | tr -d ' ')
+  _count_pretty "Files" "󰈔" "$n" "$p" "recursive"
+}
+
+countfrc() {
+  local p="${1:-.}"
+  local n
+  n=$(find "$p" -type f 2>/dev/null | wc -l | tr -d ' ')
+  _count_only "$n"
+}
+
+
+
+# TMUX --------------------------------------------------------------------- #
+# alias tm='tmux'
+alias tmk='tmux kill-server'
+alias tmls='tmux ls | bat'
+alias tms='~/.config/mytools/./tmux-sessionizer.sh'
+alias tma='tmux new-session -A'
+
+# tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
+# `tm` will allow you to select your tmux session via fzf.
+# `tm irc` will attach to the irc session (if it exists), else it will create it.
+
+tm () {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [[ -n "$1" ]]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# zsh; needs setopt re_match_pcre. You can, of course, adapt it to your own shell easily.
+tmkillf () {
+    local sessions
+    sessions="$(tmux ls|fzf --exit-0 --multi)"  || return $?
+    local i
+    for i in "${(f@)sessions}"
+    do
+        [[ $i =~ '([^:]*):.*' ]] && {
+            echo "Killing $match[1]"
+            tmux kill-session -t "$match[1]"
+        }
+    done
+}
+
+
+# ALIAS -------------------------------------------------------------------- #
+
+  # eza
+  # ls replacement
+  # https://github.com/eza-community/eza
+  if command -v eza &>/dev/null; then
+    alias ls='eza'
+    # alias ls='lsd'
+    alias ll='ls -lhg'
+    # alias lltr='ls -ltr'
+    alias lltr='eza -l -sold --reverse --group-directories-first'
+    alias lla='ls -lhga'
+    alias lltra='ls -ltra'
+    alias lstree='ls --tree'
+    alias treeza='ls --tree'
+  fi
+
+  # Bat -> Cat with wings
+  # https://github.com/sharkdp/bat
+  # Supports syntax highlighting for a large number of programming and markup languages
+  if command -v bat &>/dev/null; then
+    # --style=plain - removes line numbers and git modifications
+    # --paging=never - doesnt pipe it through less
+    alias cat='bat --paging=never --style=plain'
+    alias catt='bat'
+    alias cata='bat --show-all --paging=never'
+  fi
+
+alias c='clear'
+
+alias ppwd='echo $(pbpaste)'
+alias cdpwd='cd $(pbpaste)'
+function cpwd() {
+    pwd | tr -d '\n' | pbcopy
+  }
+
+# SYS CMD ------------------------------------------------------------------ #
+alias treepy="tree -C -P '*.py'"
+# TOOLS -------------------------------------------------------------------- #
+alias cd='z'
+alias lss='/Users/bdelonglee/.config/mytools/./lss.py'
+alias seqls='~/Documents/PROJECTS/DEV/PySeqLs/./seqls.py'
+alias lp='~/Documents/PROJECTS/DEV/PySeqLs/./list_paths.py'
+alias rvr='~/Documents/PROJECTS/DEV/PySeqLs/./rvr.py'
+alias lss2='~/.config/mytools/./lss2.py'
+# alias cdl_conv='~/Documents/PROJECTS/DEV/./cdl_convert.py'
+alias ale_to_cc='~/Documents/PROJECTS/DEV/./ale_to_cc.py'
+alias batch_cdl_conv='~/Documents/PROJECTS/DEV/./batch_cdl_converter.py'
+alias seqrm='~/Documents/PROJECTS/DEV/./seqrm.py'
+alias snip='/Users/bdelonglee/.config/snippets/./snippets.manager.sh'
+alias rvstack='~/Documents/PROJECTS/DEV/PySeqLs/./rvStacker.py'
+
+# GO COMMAND --------------------------------------------------------------- #
+alias godoc='cd ~/Documents'
+alias godow='cd ~/Dowloads/'
+alias gogit='cd ~/Documents/GIT'
+alias goconf='cd  ~/.config/'
+alias govim='cd  ~/.config/nvim/'
+
+# EXEC APP ----------------------------------------------------------------- #
+alias nv='nvim'
+alias v='vi'
+alias obs='obsidian'
+alias n='/Applications/Nuke15.0v4/Nuke15.0v4.app/Contents/MacOS/./Nuke15.0'
+alias nuke='n'
+alias m='/Applications/Autodesk/maya2024/Maya.app/Contents/MacOS/./Maya'
+alias maya='m'
+alias p='/Applications/Adobe\ Photoshop\ 2024/Adobe\ Photoshop\ 2024.app/Contents/MacOS/./Adobe\ Photoshop\ 2024'
+alias photoshop='p'
+alias rv='/Applications/RV.app/Contents/MacOS/RV'
+alias lg='lazygit'
+alias iina='/Applications/IINA.app/Contents/MacOS/iina-cli'
+
+# DOTFILES ----------------------------------------------------------------- #
+alias rld-zsh='source ~/.zshrc'
+alias rld-wez='source ~/.wezterm.lua'
+alias cfg-zsh='nvim ~/.zshrc'
+alias cfg-tmux='nvim ~/.config/tmux/tmux.conf'
+alias cfg-nvim='nvim ~/.config/nvim/init.lua'
+alias cfg-vim='nvim ~/.vimrc'
+alias cfg-aero='nvim ~/.config/aerospace/aerospace.toml'
+alias cfg-wez='nvim ~/.wezterm.lua'
+
+# ALIAS GLOBAL ------------------------------------------------------------- #
+# permet de piper grep avec seulement G
+alias -g G='| grep'
+
+# SHORTCUTS ---------------------------------------------------------------- #
+bindkey "^[[H" backward-word
+bindkey "^[[F" forward-word
+
+# AEROSPACE ALIAS ---------------------------------------------------------- #
+alias aeronext='aerospace workspace --wrap-around next'
+alias aeroprev='aerospace list-workspaces --monitor focused --empty no |  aerospace workspace --wrap-around prev'
+
+# -------------------------------------------------------------------------- #
+# ============================== YAZI Functions ============================ #
+
+function yy() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+# -------------------------------------------------------------------------- #
+# ============================== FZF SUPER CHARGED ========================= #
+
+# DOC
+
+# Token 	Match type					Description
+# sbtrkt 	fuzzy-match		      			Items that match sbtrkt
+# 'wild 	exact-match (quoted)	      			Items that include wild
+# 'wild' 	exact-boundary-match (quoted both ends) 	Items that include wild at word boundaries
+# ^music 	prefix-exact-match				Items that start with music
+# .mp3$ 	suffix-exact-match				Items that end with .mp3
+# !fire 	inverse-exact-match 				Items that do not include fire
+# !^music 	inverse-prefix-exact-match			Items that do not start with music
+# !.mp3$ 	inverse-suffix-exact-match 			Items that do not end with .mp3
+
+# FZF KEYMAPS
+# CTRL-T = $FZF_CTRL_T_COMMAND to get a list of files and directories
+# ALT-C  = $FZF_ALT_C_COMMAND to get a list of directories
+# vim ~/**<tab> runs fzf_compgen_path() with the prefix (~/) as the first argument
+# cd foo**<tab> runs fzf_compgen_dir() with the prefix (foo) as the first argument
+
+# BOF BOF... I don't understand
+# fd - cd to selected directory
+fdd() {
+  local dir
+  dir=$(find ~/ ${1:-.} -path '*/\.*' -prune \
+                  -o -type d -print 2> /dev/null | fzf +m) &&
+  cd "$dir"
+}
+
+# fdr - cd to selected parent directory
+cdp() {
+  local declare dirs=()
+  get_parent_dirs() {
+    if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+    if [[ "${1}" == '/' ]]; then
+      for _dir in "${dirs[@]}"; do echo $_dir; done
+    else
+      get_parent_dirs $(dirname "$1")
+    fi
+  }
+  local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+  cd "$DIR"
+}
+
+# cdf - cd into the directory of the selected file
+cdf() {
+   local file
+   local dir
+   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+}
+
+# alternative using ripgrep-all (rga) combined with fzf-tmux preview
+# This requires ripgrep-all (rga) installed: https://github.com/phiresky/ripgrep-all
+# This implementation below makes use of "open" on macOS, which can be replaced by other commands if needed.
+# allows to search in PDFs, E-Books, Office documents, zip, tar.gz, etc. (see https://github.com/phiresky/ripgrep-all)
+# find-in-file - usage: fif <searchTerm> or fif "string with spaces" or fif "regex"
+fif() {
+    if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+    local file
+    file="$(rga --max-count=1 --ignore-case --files-with-matches --no-messages "$*" | fzf-tmux +m --preview="rga --ignore-case --pretty --context 10 '"$*"' {}")" && echo "opening $file" && open "$file" || return 1;
+}
+
+alias inv="find ~/* -type f | fzf --tmux 90% --bind 'enter:become(nvim {})' --preview 'bat --color=always {}' --preview-window '~3' --multi"
+# alias inv="nvim $(fzf --bind 'enter:become(vim {})' --preview 'bat --color=always {}' --preview-window '~3' --multi)"
+
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+
+export FZF_DEFAULT_OPTS="
+   --tmux 80%
+   --preview 'bat -n --color=always {}'"
+
+# Preview file content using bat (https://github.com/sharkdp/bat)
+export FZF_CTRL_T_OPTS="
+  --tmux 80%
+  --walker-skip .git,node_modules,target
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+# Print tree structure in the preview window
+export FZF_ALT_C_OPTS="
+  --tmux 80%
+  --walker-skip .git,node_modules,target
+  --preview 'tree -C {}'"
+
+# CTRL-Y to copy the command into clipboard using pbcopy
+export FZF_CTRL_R_OPTS="
+  --tmux 80%
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command into clipboard'"
+
+# ================================================= #
+
+# -------------------------------------------------------------------------- #
+# ============================== VARIABLES ================================= #
+
+# VARIABLES
+export EDITOR='nvim'
+export NUKE_DISK_CACHE=~/Documents/SOFTS/nuke/Env_Var/NUKE_DISK_CACHE/
+export NUKE_TEMP_DIR=~/Documents/SOFTS/nuke/Env_Var/NUKE_TEMP_DIR/
+export VIMKEYMAP=~/.config/nvim/lua/keymaps.lua
+export VIMLUA=~/.config/nvim/init.lua
+export VIMOPT=~/.config/nvim/lua/options.lua
+
+
+# Edit line in vim with Ctrl-e
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+
+# Display reload message with timestamp and styling
+local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+print -P "%F{cyan}╭──────────────────────────────────╮%f"
+print -P "%F{cyan}│%f  %F{green}✓%f .zshrc reloaded successfully  %F{cyan}│%f"
+print -P "%F{cyan}│%f  %F{242}${timestamp}%f             %F{cyan}│%f"
+print -P "%F{cyan}╰──────────────────────────────────╯%f"
+
+# -------------------------------------------------------------------------- #
+# ============================== PATH ====================================== #
+
+# Keep PATH entries unique so repeated `source ~/.zshrc` (rld-zsh) doesn't grow it.
+# NOTE: -U only auto-dedupes writes to the `path` array, not `export PATH="X:$PATH"`
+# string assignments, so the entries below use array syntax.
+typeset -U path
+
+# Created by `pipx` on 2024-07-24 20:43:44
+path+=("/Users/bdelonglee/.local/bin")
+
+# Clean python 3 install
+path=(/opt/homebrew/opt/python@3.12/libexec/bin $path)
+path=(/opt/homebrew/bin $path)
+path=("/Users/bdelonglee/.cargo/bin" $path)
+
+case ":${PYTHONPATH}:" in
+  *":/Users/bdelonglee/Documents/PROJECTS/DEV/PySeqLs:"*) ;;
+  *) export PYTHONPATH="${PYTHONPATH}:/Users/bdelonglee/Documents/PROJECTS/DEV/PySeqLs" ;;
+esac
+
+export XDG_CONFIG_HOME=/Users/bdelonglee/.config
+
+# -------------------------------------------------------------------------- #
+# ============================== SYNTAX HIGHLIGHTING ======================= #
+# Must be sourced last so it can wrap all zle widgets defined above.
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
