@@ -83,9 +83,16 @@ alias rvr21="python /Users/bdelonglee/Documents/PROJECTS/DEV/rvr21.py"
   setopt appendhistory
   # Record timestamp of each command (helpful for auditing)
   setopt extendedhistory
-  # Share command history data between all sessions
-  setopt sharehistory
-  # Incrementally append to the history file, rather than waiting until the shell exits
+  # sharehistory is OFF on purpose: it live-merges every other session's
+  # commands into this session's in-memory history, which is what up/down
+  # arrow walks. Without it, up/down arrow only shows THIS pane/shell's own
+  # commands. Everything still lands in $HISTFILE (see incappendhistory
+  # below), so global search (fzf Ctrl-R) still covers every session.
+  # setopt sharehistory
+  # Incrementally append to the history file as each command runs, rather
+  # than waiting until the shell exits. This is what keeps $HISTFILE (and
+  # therefore Ctrl-R's global search) up to date across all sessions, even
+  # though sharehistory is off.
   setopt incappendhistory
   # Ignore duplicate commands in a row
   setopt histignoredups
