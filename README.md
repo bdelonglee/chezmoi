@@ -39,8 +39,10 @@ directly.
 | `bdelonglee/aerospace` | `~/.config/aerospace` |
 | `bdelonglee/snip` | `~/.config/snippets` |
 | `bdelonglee/karabiner` | `~/Documents/PROJECTS/DEV/karabiner`, symlinked to `~/.config/karabiner/karabiner.json` |
+| `bdelonglee/raycastNV` | `~/Documents/PROJECTS/DEV/raycast` (Raycast extension dev project) |
 
-Not included: Raycast (skipped for now).
+Not included: `~/.config/raycast` (extensions cache / AI data, mostly downloaded
+content, not hand-authored config).
 
 ## Everyday use
 
