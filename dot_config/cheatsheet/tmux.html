@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tmux Shortcuts</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Tmux Shortcuts</h1>
+  <p class="subtitle"><span class="leader">Prefix: Ctrl-a</span> &mdash; from ~/.config/tmux/tmux.conf</p>
+  <nav class="nav">
+    <a href="karabiner.html">Karabiner</a>
+    <a href="tmux.html" class="active">Tmux</a>
+    <a href="aerospace.html">Aerospace</a>
+  </nav>
+  <input class="search" id="search" type="text" placeholder="Search shortcuts...">
+
+  <div class="modes">
+    <div class="card">
+      <h2>Bindings</h2>
+
+      <h3>General</h3>
+      <table>
+        <tr><td class="key">prefix r</td><td class="app">Reload tmux config</td></tr>
+        <tr><td class="key">prefix Space</td><td class="app">List panes</td></tr>
+        <tr><td class="key">prefix Ctrl-a</td><td class="app">Send literal Ctrl-a to the app</td></tr>
+        <tr><td class="key">prefix a</td><td class="app">Switch to last window</td></tr>
+        <tr><td class="key">prefix Enter</td><td class="app">Break pane into its own window</td></tr>
+        <tr><td class="key">prefix e</td><td class="app">Toggle meetings/clock status modules</td></tr>
+      </table>
+
+      <h3>Splits &amp; panes</h3>
+      <table>
+        <tr><td class="key">prefix \</td><td class="app">Split horizontally</td></tr>
+        <tr><td class="key">prefix -</td><td class="app">Split vertically</td></tr>
+        <tr><td class="key">prefix |</td><td class="app">Split horizontally (full height)</td></tr>
+        <tr><td class="key">prefix _</td><td class="app">Split vertically (full width)</td></tr>
+        <tr><td class="key">prefix ← ↓ ↑ →</td><td class="app">Resize pane (repeatable)</td></tr>
+        <tr><td class="key">prefix o</td><td class="app">Layout: active-only (zoom-like)
+          <span class="note flag">⚠ tmux-sessionx also binds prefix+o and loads after this — in practice prefix+o opens the session switcher, not this layout.</span>
+        </td></tr>
+        <tr><td class="key">prefix M--</td><td class="app">Layout: even-vertical</td></tr>
+        <tr><td class="key">prefix M-\</td><td class="app">Layout: even-horizontal</td></tr>
+        <tr><td class="key">prefix M-r</td><td class="app">Rotate panes</td></tr>
+      </table>
+
+      <h3>Windows</h3>
+      <table>
+        <tr><td class="key">prefix 0</td><td class="app">Go to window 10</td></tr>
+        <tr><td class="key">prefix ,</td><td class="app">Rename current window</td></tr>
+        <tr><td class="key">prefix $</td><td class="app">Rename session</td></tr>
+        <tr><td class="key">prefix &lt;/&gt;</td><td class="app">Move window left / right</td></tr>
+        <tr><td class="key">Ctrl-⌥-h/l</td><td class="app">Previous / next window (no prefix)</td></tr>
+        <tr><td class="key">Ctrl-⌥-H/L</td><td class="app">Move window left/right and follow it (no prefix)</td></tr>
+      </table>
+
+      <h3>Copy mode &amp; navigation</h3>
+      <table>
+        <tr><td class="key">y (copy mode)</td><td class="app">Copy selection to pbcopy</td></tr>
+        <tr><td class="key">Ctrl-h/j/k/l</td><td class="app">Move between panes, vim-aware (forwards to Vim/Nvim splits when focused, no prefix needed)</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Plugins</h2>
+
+      <h3>tmux-yank</h3>
+      <table>
+        <tr><td class="key">prefix y</td><td class="app">Copy command line to clipboard</td></tr>
+        <tr><td class="key">prefix Y</td><td class="app">Copy current pane's cwd to clipboard</td></tr>
+        <tr><td class="key">y (visual)</td><td class="app">Copy selection to system clipboard</td></tr>
+        <tr><td class="key">Y (visual)</td><td class="app">Paste selection to command line</td></tr>
+      </table>
+
+      <h3>tmux-resurrect / tmux-continuum</h3>
+      <table>
+        <tr><td class="key">prefix Ctrl-s</td><td class="app">Save session state manually</td></tr>
+        <tr><td class="key">prefix Ctrl-r</td><td class="app">Restore session state manually</td></tr>
+        <tr><td class="key">&mdash;</td><td class="app">Continuum auto-saves and auto-restores on tmux startup (no key needed)</td></tr>
+      </table>
+
+      <h3>tmux-fzf-url</h3>
+      <table>
+        <tr><td class="key">prefix u</td><td class="app">Fuzzy-pick and open a URL visible on screen (opens in Firefox)</td></tr>
+      </table>
+
+      <h3>tmux-neolazygit</h3>
+      <table>
+        <tr><td class="key">prefix G</td><td class="app">Open lazygit</td></tr>
+      </table>
+
+      <h3>treemux</h3>
+      <table>
+        <tr><td class="key">prefix Tab</td><td class="app">Toggle nvim-tree sidebar</td></tr>
+        <tr><td class="key">prefix Backspace</td><td class="app">Toggle sidebar and focus it</td></tr>
+      </table>
+
+      <h3>tmux-jump</h3>
+      <table>
+        <tr><td class="key">prefix j, then char</td><td class="app">Easy-motion: jump to a word starting with that character</td></tr>
+      </table>
+
+      <h3>tmux-fingers</h3>
+      <table>
+        <tr><td class="key">prefix F</td><td class="app">Highlight copyable hints (paths, URLs, hashes...) on screen</td></tr>
+      </table>
+
+      <h3>tmux-sessionx</h3>
+      <table>
+        <tr><td class="key">prefix o</td><td class="app">Open session/window switcher</td></tr>
+        <tr><td class="key">⌥-Backspace</td><td class="app">Delete the selected session</td></tr>
+        <tr><td class="key">Ctrl-u / Ctrl-d</td><td class="app">Scroll preview up / down</td></tr>
+        <tr><td class="key">Ctrl-n / Ctrl-p</td><td class="app">Navigate selection up / down</td></tr>
+        <tr><td class="key">Ctrl-r</td><td class="app">Rename the selected session</td></tr>
+        <tr><td class="key">Ctrl-w</td><td class="app">Reload list showing all windows + previews</td></tr>
+        <tr><td class="key">Ctrl-x</td><td class="app">Fuzzy-cd into ~/.config (or configured path)</td></tr>
+        <tr><td class="key">Ctrl-e</td><td class="app">Expand PWD to search local directories for a new session</td></tr>
+        <tr><td class="key">Ctrl-b</td><td class="app">Back to the first query</td></tr>
+        <tr><td class="key">Ctrl-t</td><td class="app">Tree view of sessions + windows</td></tr>
+        <tr><td class="key">Ctrl-/</td><td class="app">Show tmuxinator sessions</td></tr>
+        <tr><td class="key">Ctrl-g</td><td class="app">Show fzf-marks</td></tr>
+        <tr><td class="key">?</td><td class="app">Toggle preview pane</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <footer>Generated from ~/.config/tmux/tmux.conf &mdash; regenerate manually when the config changes.</footer>
+</div>
+<script src="shared.js"></script>
+</body>
+</html>

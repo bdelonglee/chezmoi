@@ -22,6 +22,8 @@ usual locations.
 - `~/.wezterm.lua`
 - `~/.config/starship.toml`
 - `~/.config/mytools/`
+- `~/.config/cheatsheet/` (shortcut reference pages for `right⌘+/` in
+  Karabiner — see the karabiner repo's README)
 
 ## What's cloned, not managed (independent repos)
 

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aerospace Shortcuts</title>
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="wrap">
+  <h1>Aerospace Shortcuts</h1>
+  <p class="subtitle">Modifier: <span class="leader">⌥ (alt)</span> &mdash; from ~/.config/aerospace/aerospace.toml</p>
+  <nav class="nav">
+    <a href="karabiner.html">Karabiner</a>
+    <a href="tmux.html">Tmux</a>
+    <a href="aerospace.html" class="active">Aerospace</a>
+  </nav>
+  <input class="search" id="search" type="text" placeholder="Search shortcuts...">
+
+  <div class="modes">
+    <div class="card">
+      <h2>Focus &amp; move</h2>
+
+      <h3>Focus</h3>
+      <table>
+        <tr><td class="key">⌥ h/j/k/l</td><td class="app">Focus left / down / up / right</td></tr>
+      </table>
+
+      <h3>Move window</h3>
+      <table>
+        <tr><td class="key">⌥⇧ h/j/k/l</td><td class="app">Move window left / down / up / right</td></tr>
+      </table>
+
+      <h3>Resize</h3>
+      <table>
+        <tr><td class="key">⌥⇧ minus</td><td class="app">Resize smart -50</td></tr>
+        <tr><td class="key">⌥⇧ equal</td><td class="app">Resize smart +50</td></tr>
+      </table>
+
+      <h3>Layout</h3>
+      <table>
+        <tr><td class="key">⌥ /</td><td class="app">Layout: tiles (horizontal/vertical)</td></tr>
+        <tr><td class="key">⌥ ,</td><td class="app">Layout: accordion (horizontal/vertical)</td></tr>
+        <tr><td class="key">⌥ f</td><td class="app">Toggle fullscreen</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Workspaces</h2>
+
+      <h3>Go to workspace</h3>
+      <table>
+        <tr><td class="key">⌥ 1&ndash;4</td><td class="app">Workspace 1&ndash;4</td></tr>
+        <tr><td class="key">⌥ b</td><td class="app">Workspace B <span class="note">&mdash; Zen browser auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ d</td><td class="app">Workspace D <span class="note">&mdash; Discord &amp; DaVinci Resolve auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ g</td><td class="app">Workspace G <span class="note">&mdash; Chrome auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ m</td><td class="app">Workspace M <span class="note">&mdash; Maya auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ n</td><td class="app">Workspace N <span class="note">&mdash; NoMachine auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ o</td><td class="app">Workspace O <span class="note">&mdash; Obsidian &amp; Zen Notes auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ q</td><td class="app">Workspace Q <span class="note">&mdash; Qspace Pro auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ r</td><td class="app">Workspace R <span class="note">&mdash; RV auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ s</td><td class="app">Workspace S <span class="note">&mdash; Spotify auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ t</td><td class="app">Workspace T <span class="note">&mdash; Firefox &amp; WezTerm auto-assigned here</span></td></tr>
+        <tr><td class="key">⌥ v</td><td class="app">Workspace V</td></tr>
+        <tr><td class="key">⌥ y</td><td class="app">Workspace Y</td></tr>
+        <tr><td class="key">&mdash;</td><td class="app">Workspace 3 <span class="note">&mdash; NordPass, NordVPN &amp; Messages auto-assigned here (no direct key binding)</span></td></tr>
+      </table>
+
+      <h3>Move window to workspace</h3>
+      <table>
+        <tr><td class="key">⌥⇧ 1&ndash;4</td><td class="app">Move window to workspace 1&ndash;4</td></tr>
+        <tr><td class="key">⌥⇧ b</td><td class="app">Move window to workspace B</td></tr>
+        <tr><td class="key">⌥⇧ d</td><td class="app">Move window to workspace D</td></tr>
+        <tr><td class="key">⌥⇧ g</td><td class="app">Move window to workspace G</td></tr>
+        <tr><td class="key">⌥⇧ m</td><td class="app">Move window to workspace M</td></tr>
+        <tr><td class="key">⌥⇧ n</td><td class="app">Move window to workspace M
+          <span class="note flag">⚠ as configured in aerospace.toml, this is likely a copy-paste typo (n/o/q/r all point to "M" instead of their own letter) &mdash; not something I changed, just reflecting current behavior.</span>
+        </td></tr>
+        <tr><td class="key">⌥⇧ o</td><td class="app">Move window to workspace M <span class="note flag">⚠ same apparent typo</span></td></tr>
+        <tr><td class="key">⌥⇧ q</td><td class="app">Move window to workspace M <span class="note flag">⚠ same apparent typo</span></td></tr>
+        <tr><td class="key">⌥⇧ r</td><td class="app">Move window to workspace M <span class="note flag">⚠ same apparent typo</span></td></tr>
+        <tr><td class="key">⌥⇧ s</td><td class="app">Move window to workspace S</td></tr>
+        <tr><td class="key">⌥⇧ t</td><td class="app">Move window to workspace T</td></tr>
+        <tr><td class="key">⌥⇧ v</td><td class="app">Move window to workspace V</td></tr>
+        <tr><td class="key">⌥⇧ y</td><td class="app">Move window to workspace Y</td></tr>
+      </table>
+
+      <h3>Workspace / monitor navigation</h3>
+      <table>
+        <tr><td class="key">⌥ Tab</td><td class="app">Workspace back-and-forth</td></tr>
+        <tr><td class="key">⌥⇧ Tab</td><td class="app">Move workspace to next monitor</td></tr>
+        <tr><td class="key">⌥⌃ Tab</td><td class="app">Move window to next monitor</td></tr>
+        <tr><td class="key">⌥⌃⇧ Tab</td><td class="app">Focus next monitor</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Launch &amp; modes</h2>
+
+      <h3>Launch</h3>
+      <table>
+        <tr><td class="key">⌥ ←/→</td><td class="app">Previous / next workspace (custom script: mytools/aerospace_prev.sh / aerospace_next.sh)</td></tr>
+        <tr><td class="key">⌥ Enter</td><td class="app">Open WezTerm</td></tr>
+      </table>
+
+      <h3>Service mode</h3>
+      <table>
+        <tr><td class="key">⌥⇧ ;</td><td class="app">Enter service mode</td></tr>
+        <tr><td class="key">esc</td><td class="app">Reload config, return to main mode</td></tr>
+        <tr><td class="key">r</td><td class="app">Flatten workspace tree (reset layout), return to main</td></tr>
+        <tr><td class="key">f</td><td class="app">Toggle floating / tiling layout, return to main</td></tr>
+        <tr><td class="key">backspace</td><td class="app">Close all windows but current, return to main</td></tr>
+        <tr><td class="key">⌥⇧ h/j/k/l</td><td class="app">Join-with left/down/up/right, return to main</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <footer>Generated from ~/.config/aerospace/aerospace.toml &mdash; regenerate manually when the config changes.</footer>
+</div>
+<script src="shared.js"></script>
+</body>
+</html>
