@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Finds every repo chezmoi auto-clones via a run_once_after_*.sh script
-# (parsed from their target="..." line), and checks each is pushed to
-# origin. Prompts to push anything that isn't, so a fresh `chezmoi apply`
-# on a new machine never clones a repo that's missing local-only work.
+# Checks the chezmoi source repo itself, plus every repo chezmoi
+# auto-clones via a run_once_after_*.sh script (parsed from their
+# target="..." line), to make sure each is pushed to origin. Prompts to
+# push anything that isn't, so a fresh `chezmoi apply` on a new machine
+# never clones/pulls a repo that's missing local-only work.
 
 set -euo pipefail
 
@@ -31,7 +32,7 @@ status_label() {
 
 source_dir=$(chezmoi source-path)
 
-targets=()
+targets=("$source_dir")
 while IFS= read -r line; do
     targets+=("$line")
 done < <(
@@ -40,12 +41,7 @@ done < <(
         | while read -r t; do eval echo "$t"; done
 )
 
-if [[ ${#targets[@]} -eq 0 ]]; then
-    echo "No run_once_after_*.sh clone targets found."
-    exit 0
-fi
-
-echo "${bold}Checking ${#targets[@]} chezmoi-cloned repos…${reset}"
+echo "${bold}Checking ${#targets[@]} chezmoi-tracked repos…${reset}"
 echo
 
 needs_attention=()

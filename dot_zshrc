@@ -293,6 +293,7 @@ alias batch_cdl_conv='~/Documents/PROJECTS/DEV/./batch_cdl_converter.py'
 alias seqrm='~/Documents/PROJECTS/DEV/./seqrm.py'
 alias snip='/Users/bdelonglee/.config/snippets/./snippets.manager.sh'
 alias rvstack='~/Documents/PROJECTS/DEV/PySeqLs/./rvStacker.py'
+alias chezcheck='~/.config/mytools/./chezmoi-check-clones.sh'
 
 # GO COMMAND --------------------------------------------------------------- #
 alias godoc='cd ~/Documents'
