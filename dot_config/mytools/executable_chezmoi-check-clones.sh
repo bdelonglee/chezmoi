@@ -6,6 +6,18 @@
 
 set -euo pipefail
 
+if [[ -t 1 ]]; then
+    bold=$'\033[1m'
+    dim=$'\033[2m'
+    red=$'\033[31m'
+    green=$'\033[32m'
+    yellow=$'\033[33m'
+    blue=$'\033[34m'
+    reset=$'\033[0m'
+else
+    bold="" dim="" red="" green="" yellow="" blue="" reset=""
+fi
+
 source_dir=$(chezmoi source-path)
 
 targets=()
@@ -22,38 +34,59 @@ if [[ ${#targets[@]} -eq 0 ]]; then
     exit 0
 fi
 
+echo "${bold}Checking ${#targets[@]} chezmoi-cloned repos…${reset}"
+echo
+
+needs_attention=()
+
 for dir in "${targets[@]}"; do
-    echo "== $dir =="
+    name=$(basename "$dir")
+    printf '%s%s%s  %s%s%s\n' "$bold" "$name" "$reset" "$dim" "$dir" "$reset"
 
     if [[ ! -d "$dir/.git" ]]; then
-        echo "  not present locally, skipping"
+        printf '   %s○ not present locally, skipping%s\n\n' "$dim" "$reset"
         continue
     fi
 
+    dirty=""
     if [[ -n "$(git -C "$dir" status --porcelain)" ]]; then
-        echo "  uncommitted changes present (not pushable as-is)"
+        dirty="1"
+        printf '   %s⚠ uncommitted changes%s %s(not pushable as-is)%s\n' "$yellow" "$reset" "$dim" "$reset"
     fi
 
     branch=$(git -C "$dir" branch --show-current)
     git -C "$dir" fetch origin --quiet 2>/dev/null || true
 
     if ! git -C "$dir" rev-parse --abbrev-ref --symbolic-full-name '@{u}' &>/dev/null; then
-        echo "  branch '$branch' has no upstream tracking on origin"
-        read -r -p "  push and set upstream now? [y/N] " ans
+        printf '   %s✗ branch %s%s%s has no upstream tracking on origin%s\n' "$red" "$bold" "$branch" "$red" "$reset"
+        needs_attention+=("$name")
+        read -r -p "   push and set upstream now? [y/N] " ans
+        echo
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             git -C "$dir" push -u origin "$branch"
+            echo
         fi
         continue
     fi
 
     ahead=$(git -C "$dir" rev-list --count '@{u}..HEAD')
     if [[ "$ahead" -gt 0 ]]; then
-        echo "  $ahead commit(s) ahead of origin/$branch"
-        read -r -p "  push now? [y/N] " ans
+        printf '   %s✗ %s commit(s) ahead of origin/%s%s\n' "$red" "$ahead" "$branch" "$reset"
+        needs_attention+=("$name")
+        read -r -p "   push now? [y/N] " ans
+        echo
         if [[ "$ans" =~ ^[Yy]$ ]]; then
             git -C "$dir" push origin "$branch"
+            echo
         fi
     else
-        echo "  up to date with origin/$branch"
+        printf '   %s✓ up to date with origin/%s%s\n\n' "$green" "$branch" "$reset"
+        [[ -n "$dirty" ]] && needs_attention+=("$name")
     fi
 done
+
+if [[ ${#needs_attention[@]} -eq 0 ]]; then
+    echo "${green}${bold}All clean — everything pushed.${reset}"
+else
+    echo "${yellow}${bold}Needs attention:${reset} ${needs_attention[*]}"
+fi
