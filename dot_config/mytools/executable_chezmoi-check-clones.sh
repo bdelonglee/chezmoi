@@ -18,6 +18,17 @@ else
     bold="" dim="" red="" green="" yellow="" blue="" reset=""
 fi
 
+status_label() {
+    case "$1" in
+        '??') echo "new" ;;
+        ' M'|'M '|'MM') echo "modified" ;;
+        ' D'|'D ') echo "deleted" ;;
+        ' A'|'A ') echo "added" ;;
+        R*) echo "renamed" ;;
+        *) echo "$1" ;;
+    esac
+}
+
 source_dir=$(chezmoi source-path)
 
 targets=()
@@ -49,9 +60,15 @@ for dir in "${targets[@]}"; do
     fi
 
     dirty=""
-    if [[ -n "$(git -C "$dir" status --porcelain)" ]]; then
+    porcelain="$(git -C "$dir" status --porcelain)"
+    if [[ -n "$porcelain" ]]; then
         dirty="1"
         printf '   %s⚠ uncommitted changes%s %s(not pushable as-is)%s\n' "$yellow" "$reset" "$dim" "$reset"
+        while IFS= read -r entry; do
+            code="${entry:0:2}"
+            file="${entry:3}"
+            printf '     %s%-8s%s %s\n' "$dim" "$(status_label "$code")" "$reset" "$file"
+        done <<< "$porcelain"
     fi
 
     branch=$(git -C "$dir" branch --show-current)
