@@ -213,7 +213,8 @@ countfrc() {
 alias tmk='tmux kill-server'
 alias tmls='tmux ls | bat'
 alias tms='~/.config/mytools/./tmux-sessionizer.sh'
-alias tma='tmux new-session -A'
+alias tma='tmux attach'
+alias tmA='tmux new-session -A'
 
 # tm - create new tmux session, or switch to existing one. Works from within tmux too. (@bag-man)
 # `tm` will allow you to select your tmux session via fzf.
